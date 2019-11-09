@@ -5,16 +5,18 @@
         :rules="rules" 
         class="form">
 
-        <el-form-item class="form-item">
+        <el-form-item class="form-item" prop="username">
             <el-input 
-            placeholder="用户名/手机">
+            placeholder="用户名/手机"
+            v-model="form.username">
             </el-input>
         </el-form-item>
 
-        <el-form-item class="form-item">
+        <el-form-item class="form-item" prop="password">
             <el-input 
             placeholder="密码" 
-            type="password">
+            type="password"
+            v-model="form.password">
             </el-input>
         </el-form-item>
 
@@ -36,9 +38,29 @@
 export default {
 data(){
     return {
-      form:{},
+      form:{
+        //   登陆用户名
+          username:'',
+        //  登陆密码
+          password:''
+      },
     //   表单数据
-      rules:{}
+      rules:{
+          username:[
+              {
+              required:true,
+              message:'请输入用户名',
+              trigge:'blur'
+              }
+          ],
+          password:[
+              {
+              required:true,
+               message: '请输入密码',
+              trigge:'blur'
+              }
+          ]
+      }
   
     }
 },
