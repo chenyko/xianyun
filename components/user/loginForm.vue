@@ -76,6 +76,7 @@ methods:{
               }).then(res=>{
                  console.log(res.data);
                  
+                 this.$store.commit('user/setUserInpo',res.data)
               })
           }
       })
