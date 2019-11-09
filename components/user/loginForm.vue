@@ -66,7 +66,19 @@ data(){
 },
 methods:{
     handleLoginSubmit(){
-
+      this.$refs['form'].validate((valid)=>{
+        //   为ture就发送请求
+          if(valid){
+              this.$axios({
+                  url:"/accounts/login",
+                  method:'post',
+                  data:this.form
+              }).then(res=>{
+                 console.log(res.data);
+                 
+              })
+          }
+      })
     }
 }
 }
