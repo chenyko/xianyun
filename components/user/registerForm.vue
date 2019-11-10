@@ -1,6 +1,6 @@
 <template>
     <el-form 
-        :model="form" 
+        :model="form"
         ref="form" 
         :rules="rules" 
         class="form">
@@ -28,7 +28,7 @@
             <el-form-item class="form-item" prop='nickname'>
                 <el-input 
                 placeholder="你的名字"
-                v-modle="form.nickname">
+                v-model="form.nickname">
                 </el-input>
             </el-form-item>
 
@@ -59,6 +59,17 @@
 <script>
 export default {
    data(){
+
+    //   确认密码
+    const validatePass=(rules,value,callback)=>{
+       if(value===''){
+          callback(new Error('请再次输入密码'))
+       }else if(value !=this.password){
+           callback(new Error('两次输入密码不一致'))
+       }else{
+           callback()
+       }
+    }
        return{
         form:{
             username:'',
@@ -98,8 +109,8 @@ export default {
           ],
            checkPassword:[
               {
-              required:true,
-              message: '请确认密码',
+              validator: validatePass, 
+           
               trigge:'blur'
               }
           ]
