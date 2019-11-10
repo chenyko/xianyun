@@ -16,6 +16,7 @@
         <nuxt-link to="/air">国内机票</nuxt-link>
       </el-row>
 
+
       <!-- 登录/用户信息 -->
       <el-row type="flex" align="middle">
         <el-dropdown v-if="$store.state.user.userInfo.token">
@@ -28,11 +29,13 @@
               class="el-icon-arrow-down el-icon--right"
             ></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu >
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item @click.native="handleLogout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+
+        
 
         <!-- 不存在用户信息展示登录注册链接 -->
         <nuxt-link to="/user/login" class="account-link" v-else>登录 / 注册</nuxt-link>
@@ -44,7 +47,16 @@
 export default {
   methods: {
     // 用户退出
-    handleLogout() {}
+    handleLogout() {
+      console.log('点击了退出');
+      
+     const {commit} = this.$store;
+     commit("user/cleanUserInfo");
+      this.$message({
+        message: "退出成功",
+        type: "success"
+      })
+    }
   }
 };
 </script>
