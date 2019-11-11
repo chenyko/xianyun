@@ -110,19 +110,23 @@ export default {
     }
 
 
-    this.$axios({
-        url: `/captchas`,
-        method: "POST",
-        data: {
-            tel: this.form.username
-        }
-    }).then(res => {
-        const {code} = res.data;
-        this.$confirm(`模拟手机验证码为：${code}`, '提示', {
-            confirmButtonText: '确定',
-            showCancelButton: false,
-            type: 'warning'
-        })
+    // this.$axios({
+    //     url: `/captchas`,
+    //     method: "POST",
+    //     data: {
+    //         tel: this.form.username
+    //     }
+    // }).then(res => {
+    //     const {code} = res.data;
+    //     this.$confirm(`模拟手机验证码为：${code}`, '提示', {
+    //         confirmButtonText: '确定',
+    //         showCancelButton: false,
+    //         type: 'warning'
+    //     })
+    // })
+
+    this.$store.dispatch('user/sendCaptcha',this.form.username).then(code=>{
+      this.$message.success('模拟手机返回的验证码：' + code)
     })
     },
     handleRegSubmit(){

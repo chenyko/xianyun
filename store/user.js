@@ -35,5 +35,17 @@ export const actions={
            
           store.commit('setUserInpo',res.data)
         })
+    },
+    sendCaptcha(store,tel){
+       return this.$axios({
+            url: `/captchas`,
+            method: "POST",
+            data: {
+                tel
+            }
+        }).then(res => {
+            const {code} = res.data;
+            return code;
+        })
     }
 }
