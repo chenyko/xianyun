@@ -79,10 +79,16 @@ methods:{
                  
             //      this.$store.commit('user/setUserInpo',res.data)
             //   })
-            await this.$store.dispatch('user/login',this.form);
+            try{
+               await this.$store.dispatch('user/login',this.form);
             // 跳转到首页
             this.$router.replace('/');
+            // 弹窗提示
             this.$message.success('登陆成功')
+            }catch(err){
+
+            }
+            
             
           }
       })
