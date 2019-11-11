@@ -43,6 +43,16 @@ export default {
         callback();
       }
     };
+
+     const validateUsername=(rule,value,callback)=>{
+       if(value===""){
+         callback(new Error('请输入用户名'))
+       }else if(!(/^1[3|5|7|8][0-9]{9}/.test(value)) ){
+           callback(new Error('手机号码格式错误'));
+       }else{
+         callback()
+       }
+     }
     return {
       form: {
         username: "",
@@ -53,11 +63,13 @@ export default {
       },
       rules: {
         username: [
-          {
-            required: true,
-            message: "请输入用户名",
-            trigge: "blur"
-          }
+          // {
+          //   required: true,
+          //   message: "请输入用户名",
+          //   trigge: "blur"
+          // }
+           // 自定义验证手机号码
+           { validator: validateUsername, trigger: 'blur' }
         ],
         password: [
           {
@@ -93,22 +105,25 @@ export default {
       console.log("点击了发送验证码按钮");
 
       if(!this.form.username){
-        this.$confirm('手机号码不能为空', '提示', {
-            confirmButtonText: '确定',
-            showCancelButton: false,
-            type: 'warning'
-        })
-        return;
-    }
+          this.$message.error("手机号码不能为空");
+                return;
+        }
+        
 
-    if(this.form.username.length !== 11){
-        this.$confirm('手机号码格式错误', '提示', {
-            confirmButtonText: '确定',
-            showCancelButton: false,
-            type: 'warning'
-        })
-        return
-    }
+    // if(this.form.username.length !== 11){
+    //     this.$confirm('手机号码格式错误', '提示', {
+    //         confirmButtonText: '确定',
+    //         showCancelButton: false,
+    //         type: 'warning'
+    //     })
+    //     return
+    // }
+
+
+
+
+
+
 
 
     // this.$axios({
