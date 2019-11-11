@@ -6,7 +6,7 @@ export const state = () => ({
     },
 }) 
 
-
+// 同步存储数据
 export const mutations={
     setUserInpo(state,data){
         state.userInfo=data
@@ -20,5 +20,20 @@ export const mutations={
             localStorage.removeItem('userInfo'); 
         }
         state.userInfo={}
+    }
+}
+
+// 异步存储数据
+export const actions={
+    login(store,data){
+     return   this.$axios({
+            url:"/accounts/login",
+            method:'post',
+            data
+        }).then(res=>{
+        //    console.log(res.data);
+           
+          store.commit('setUserInpo',res.data)
+        })
     }
 }

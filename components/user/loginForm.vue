@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { async } from 'q'
 export default {
 data(){
     return {
@@ -66,18 +67,23 @@ data(){
 },
 methods:{
     handleLoginSubmit(){
-      this.$refs['form'].validate((valid)=>{
+      this.$refs['form'].validate( async (valid)=>{
         //   为ture就发送请求
           if(valid){
-              this.$axios({
-                  url:"/accounts/login",
-                  method:'post',
-                  data:this.form
-              }).then(res=>{
-                 console.log(res.data);
+            //   this.$axios({
+            //       url:"/accounts/login",
+            //       method:'post',
+            //       data:this.form
+            //   }).then(res=>{
+            //      console.log(res.data);
                  
-                 this.$store.commit('user/setUserInpo',res.data)
-              })
+            //      this.$store.commit('user/setUserInpo',res.data)
+            //   })
+            await this.$store.dispatch('user/login',this.form);
+            // 跳转到首页
+            this.$router.replace('/');
+            this.$message.success('登陆成功')
+            
           }
       })
     }
