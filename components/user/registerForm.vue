@@ -24,8 +24,7 @@
       <el-input placeholder="确认密码" type="password" v-model="form.checkPassword"></el-input>
     </el-form-item>
 
-    <el-button class="submit" type="primary">
-      <!-- @click="handleRegSubmit" -->
+    <el-button class="submit" type="primary" @click="handleRegSubmit">
       注册
     </el-button>
   </el-form>
@@ -37,7 +36,7 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value != this.password) {
+      } else if (value != this.form.password) {
         callback(new Error("两次输入密码不一致"));
       } else {
         callback();
@@ -126,7 +125,22 @@ export default {
         })
     })
     },
-    
+    handleRegSubmit(){
+      console.log('点击了注册按钮');
+      
+       this.$refs['form'].validate((valid)=>{
+         if(valid){
+           const {checkPassword, ...props} = this.form;
+           this.$axios({
+                url: `/accounts/register`,
+                method: "POST",
+                data: props
+            }).then(res => {
+                console.log(res.data);
+            })
+         }
+       })
+    }
   }
 };
 </script>
