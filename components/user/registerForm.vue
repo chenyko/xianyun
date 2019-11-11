@@ -89,7 +89,7 @@ export default {
     };
   },
   methods: {
-    handleSendCaptcha() {
+  async  handleSendCaptcha() {
       console.log("点击了发送验证码按钮");
 
       if(!this.form.username){
@@ -107,7 +107,7 @@ export default {
             showCancelButton: false,
             type: 'warning'
         })
-        return;
+        return
     }
 
 
@@ -126,9 +126,14 @@ export default {
     //     })
     // })
 
-    this.$store.dispatch('user/sendCaptcha',this.form.username).then(code=>{
-      this.$message.success('模拟手机返回的验证码：' + code)
-    })
+    // this.$store.dispatch('user/sendCaptcha',this.form.username).then(code=>{
+    //   this.$message.success('模拟手机返回的验证码：' + code)
+    // })
+
+    //  await 可以接受promsie的返回值
+     const code = await this.$store.dispatch('user/sendCaptcha',this.form.username);
+
+     this.$message.success('模拟手机返回的验证码：' + code)
     },
     handleRegSubmit(){
       console.log('点击了注册按钮');
