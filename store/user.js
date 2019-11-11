@@ -47,5 +47,18 @@ export const actions={
             const {code} = res.data;
             return code;
         })
+    },
+
+    register(store,data){
+        
+        return   this.$axios({
+                url: `/accounts/register`,
+                method: "POST",
+                data
+            }).then(res => {
+               
+                // 注册完毕后立即登陆
+                store.commit('setUserInpo',res.data)
+            })
     }
 }

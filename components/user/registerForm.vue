@@ -30,6 +30,7 @@
   </el-form>
 </template>
 <script>
+import { async } from 'q';
 export default {
   data() {
     //   确认密码
@@ -132,16 +133,22 @@ export default {
     handleRegSubmit(){
       console.log('点击了注册按钮');
       
-       this.$refs['form'].validate((valid)=>{
+       this.$refs['form'].validate( async valid =>{
          if(valid){
-           const {checkPassword, ...props} = this.form;
-           this.$axios({
-                url: `/accounts/register`,
-                method: "POST",
-                data: props
-            }).then(res => {
-                console.log(res.data);
-            })
+   const {checkPassword, ...props} = this.form;
+          //  this.$axios({
+          //       url: `/accounts/register`,
+          //       method: "POST",
+          //       data: props
+          //   }).then(res => {
+          //       console.log(res.data);
+          //   })
+         await this.$store.dispatch('user/register',props);
+        //  跳转到首页
+         this.$router.replace('/');
+        //  弹框提示
+         this.$message.success('注册成功')
+
          }
        })
     }
