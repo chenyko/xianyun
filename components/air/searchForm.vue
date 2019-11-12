@@ -40,7 +40,7 @@
         <!-- change 用户确认选择日期时触发 -->
         <el-date-picker
           type="date"
-           :picker-options="pickerOptions"
+          :picker-options="pickerOptions"
           v-model="form.departDate"
           placeholder="请选择日期"
           style="width: 100%;"
@@ -82,10 +82,10 @@ export default {
 
       // 禁用日期选中
       pickerOptions: {
-                disabledDate(time) {
-                    return time.getTime()  < Date.now() - 3600 * 1000 * 24;
-                }
-            }
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 3600 * 1000 * 24;
+        }
+      }
     };
   },
   methods: {
@@ -146,7 +146,6 @@ export default {
     handleDepartSelect(item) {
       console.log(item);
 
-      
       this.form.departCity = item.value;
       this.form.departCodde = item.sort;
     },
@@ -160,35 +159,56 @@ export default {
 
     // 出发城市失去焦点的时候触发
     handleDepartBlur() {
-        if(this.departCities.length===0) return
-        // 用于认为输入是正确的，没有选中下拉框，所以需要默认选中第一个
-         this.form.departCity = this.departCities[0].value;
-         this.form.departCodde = this.departCities[0].sort;
+      if (this.departCities.length === 0) return;
+      // 用于认为输入是正确的，没有选中下拉框，所以需要默认选中第一个
+      this.form.departCity = this.departCities[0].value;
+      this.form.departCodde = this.departCities[0].sort;
     },
 
     // 到达城市失去焦点的时候触发
     handleDestBlur() {
-        
-        if(this.destCities.length===0) return
-        // 用于认为输入是正确的，没有选中下拉框，所以需要默认选中第一个
-         this.form.destCity = this.destCities[0].value;
-         this.form.destCode = this.destCities[0].sort;
-        //  console.log(this.form.destCode);
-         
+      if (this.destCities.length === 0) return;
+      // 用于认为输入是正确的，没有选中下拉框，所以需要默认选中第一个
+      this.form.destCity = this.destCities[0].value;
+      this.form.destCode = this.destCities[0].sort;
+      //  console.log(this.form.destCode);
     },
     // 确认选择日期时触发
     handleDate(value) {
-        // moment是一个方法，可以传递时间Date对象。如果不传递参数就会获取当前的时间
-        this.form.departDate=moment(value).format('YYYY-MM-DD')
-        console.log(this.form.departDate);
-        
+      // moment是一个方法，可以传递时间Date对象。如果不传递参数就会获取当前的时间
+      this.form.departDate = moment(value).format("YYYY-MM-DD");
+      console.log(this.form.departDate);
     },
 
     // 触发和目标城市切换时触发
     handleReverse() {},
 
     // 提交表单是触发
-    handleSubmit() {}
+    handleSubmit() {
+      const rules = [
+        { value: this.form.departCity, message: "请输入出发城市" },
+        { value: this.form.destCity, message: "请输入到达城市" },
+        { value: this.form.departDate, message: "请选择出发时间" }
+      ];
+
+      let valid=true;
+      rules.forEach(v=>{
+        // 只要有一个条件不满足，禁止循环
+        if(!valid) return
+        if(!v.value){
+          this.$alert(v.message,'提示')
+          valid=false
+        }
+      })
+
+       // 只要有一个条件不满足，禁止跳转
+        if(!valid) return
+
+       this.$router.push({
+          path:'/air/flights',
+          query:this.form
+        })
+    }
   },
   mounted() {}
 };
