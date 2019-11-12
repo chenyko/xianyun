@@ -136,12 +136,16 @@ export default {
        
         // 出发城市下拉选择时触发
         handleDepartSelect(item) {
+            console.log(item);
             
+            this.form.departCity=item.value
+            this.form.departCodde=item.sort
         },
 
         // 目标城市下拉选择时触发
         handleDestSelect(item) {
-            
+            this.form.destCity=item.value;
+            this.form.destCode=item.sort;
         },
 
         // 确认选择日期时触发
