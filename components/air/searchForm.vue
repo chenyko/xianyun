@@ -81,6 +81,11 @@ export default {
     methods: {
         // tab切换时触发
         handleSearchTab(item, index){
+            if(index===1){
+                this.$alert('目前不支持往返','提示',{
+                    type:'warning'
+                })
+            }
             
         },
         
