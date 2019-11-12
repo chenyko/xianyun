@@ -40,6 +40,7 @@
         <!-- change 用户确认选择日期时触发 -->
         <el-date-picker
           type="date"
+           :picker-options="pickerOptions"
           v-model="form.departDate"
           placeholder="请选择日期"
           style="width: 100%;"
@@ -77,7 +78,14 @@ export default {
       // 出发城市列表
       departCities: [],
       // 到达城市列表
-      destCities: []
+      destCities: [],
+
+      // 禁用日期选中
+      pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime()  < Date.now() - 3600 * 1000 * 24;
+                }
+            }
     };
   },
   methods: {
