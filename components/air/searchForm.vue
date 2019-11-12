@@ -137,15 +137,18 @@ export default {
         // 出发城市下拉选择时触发
         handleDepartSelect(item) {
             console.log(item);
-            
-            this.form.departCity=item.value
-            this.form.departCodde=item.sort
+            if(this.departCities.length===0) return;
+            // 用于认为输入是正确的，没有选中下拉框，所以需要默认选中第一个
+            this.form.departCity=this.departCities[0].value
+            this.form.departCodde=this.departCities[0].sort
         },
 
         // 目标城市下拉选择时触发
         handleDestSelect(item) {
-            this.form.destCity=item.value;
-            this.form.destCode=item.sort;
+            if(this.departCities.length===0) return;
+            // 用于认为输入是正确的，没有选中下拉框，所以需要默认选中第一个
+            this.form.destCity=this.destCities[0].value;
+            this.form.destCode=this.destCities[0].sort;
         },
 
         // 确认选择日期时触发
