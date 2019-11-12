@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -164,11 +165,16 @@ export default {
         // 用于认为输入是正确的，没有选中下拉框，所以需要默认选中第一个
          this.form.destCity = this.destCities[0].value;
          this.form.destCode = this.destCities[0].sort;
-         console.log(this.form.destCode);
+        //  console.log(this.form.destCode);
          
     },
     // 确认选择日期时触发
-    handleDate(value) {},
+    handleDate(value) {
+        // moment是一个方法，可以传递时间Date对象。如果不传递参数就会获取当前的时间
+        this.form.departDate=moment(value).format('YYYY-MM-DD')
+        console.log(this.form.departDate);
+        
+    },
 
     // 触发和目标城市切换时触发
     handleReverse() {},
