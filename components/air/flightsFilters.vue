@@ -21,20 +21,32 @@
         <el-select size="mini" v-model="flightTimes" placeholder="起飞时间" @change="handleFlightTimes">
           <!-- 起飞时间段选项 -->
           <!-- label：是显示在列表中的字符串, value是选中时候的值，必须是每个选项不一样字符串 -->
-          <el-option v-for="(item,index) in data.options.flightTimes" :key='index'
-          :label="`${item.from}:00 - ${item.to}:00`" 
-          :value="`${item.from},${item.to}`"></el-option>
+          <el-option
+            v-for="(item,index) in data.options.flightTimes"
+            :key="index"
+            :label="`${item.from}:00 - ${item.to}:00`"
+            :value="`${item.from},${item.to}`"
+          ></el-option>
         </el-select>
       </el-col>
       <el-col :span="4">
         <el-select size="mini" v-model="company" placeholder="航空公司" @change="handleCompany">
-          <el-option v-for="(item,index) in data.options.company" :key='index'
-          :label="item" :value="item"></el-option>
+          <el-option
+            v-for="(item,index) in data.options.company"
+            :key="index"
+            :label="item"
+            :value="item"
+          ></el-option>
         </el-select>
       </el-col>
       <el-col :span="4">
         <el-select size="mini" v-model="airSize" placeholder="机型" @change="handleAirSize">
-          <el-option v-for="(item,index) in airSizeList"  :key='index' :label="item.label" :value="item.type"></el-option>
+          <el-option
+            v-for="(item,index) in airSizeList"
+            :key="index"
+            :label="item.label"
+            :value="item.type"
+          ></el-option>
         </el-select>
       </el-col>
     </el-row>
@@ -52,13 +64,13 @@ export default {
       airport: "", // 机场
       flightTimes: "", // 出发时间
       company: "", // 航空公司
-      airSize: "" ,// 机型大小
+      airSize: "", // 机型大小
 
       // 选择机型大小
-      airSizeList:[
-        {label:'大',type:'L'},
-        {label:'中',type:'M'},
-        {label:'小',type:'S'}
+      airSizeList: [
+        { label: "大", type: "L" },
+        { label: "中", type: "M" },
+        { label: "小", type: "S" }
       ]
     };
   },
@@ -75,38 +87,45 @@ export default {
     // 选择出发时间时候触发
     handleFlightTimes(value) {
       // val 6,12 这种形式的
-       const [start,end]=value.split(',') //[6,12]
+      const [start, end] = value.split(","); //[6,12]
       //  console.log([start,end],555);
-       
-       const arr=this.data.flights.filter(v=>{
+
+      const arr = this.data.flights.filter(v => {
         // console.log(v.dep_time);
-         
-       const current = v.dep_time.split(":")[0];
-     
-      // 出发小时必须要小于或者等于选中的开始时间，并且小于选中的结束时间
-       return  +start <= +current && +current < +end;
-       })
-       this.$emit('setDataList',arr)
+
+        const current = v.dep_time.split(":")[0];
+
+        // 出发小时必须要小于或者等于选中的开始时间，并且小于选中的结束时间
+        return +start <= +current && +current < +end;
+      });
+      this.$emit("setDataList", arr);
     },
 
     // 选择航空公司时候触发
     handleCompany(value) {
-      const arr = this.data.flights.filter(v=>{
+      const arr = this.data.flights.filter(v => {
         return v.airline_name == value;
-      })
-      this.$emit('setDataList',arr)
+      });
+      this.$emit("setDataList", arr);
     },
 
     // 选择机型时候触发
     handleAirSize(value) {
-      const arr=this.data.flights.filter(v=>{
+      const arr = this.data.flights.filter(v => {
         return v.plane_size == value;
-      })
-      this.$emit('setDataList',arr)
+      });
+      this.$emit("setDataList", arr);
     },
 
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+      this.airport = ""; // 机场
+      this.flightTimes = ""; // 出发时间
+      this.company = ""; // 航空公司
+      this.airSize = ""; // 机型大小
+      // 触发传递的事件，修改dataList
+      this.$emit("setDataList", this.data.flights);
+    }
   }
 };
 </script>
