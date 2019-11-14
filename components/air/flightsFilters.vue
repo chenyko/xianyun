@@ -68,11 +68,16 @@ export default {
     // 选择出发时间时候触发
     handleFlightTimes(value) {
       // val 6,12 这种形式的
-      
+
     },
 
     // 选择航空公司时候触发
-    handleCompany(value) {},
+    handleCompany(value) {
+      const arr = this.data.flights.filter(v=>{
+        return v.airline_name == value;
+      })
+      this.$emit('setDataList',arr)
+    },
 
     // 选择机型时候触发
     handleAirSize(value) {},

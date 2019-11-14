@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <FlightsFilters :data='flightsData'/>
+        <FlightsFilters :data='flightsData' @setDataList='setDataList'/>
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -83,7 +83,7 @@ export default {
         (this.pageIndex - 1) * this.pageSize,
         this.pageIndex * this.pageSize
       );
-      // console.log(arr,7777);
+       console.log(arr,7777);
       
       return arr;
     }
@@ -94,6 +94,10 @@ export default {
     },
     handleCurrentChange(val) {
       this.pageIndex = val;
+    },
+    setDataList(arr){
+      this.flightsData.flights = arr;
+      console.log(this.flightsData.flights,6666);
     }
   }
 };
