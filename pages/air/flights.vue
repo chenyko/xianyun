@@ -46,7 +46,8 @@ export default {
       // 总数据，包含了 flights， info， options，flights用来渲染航班列表
       flightsData: {
         flights: [],
-        info:{}
+        info:{},
+        options:{}
       },
 
       // 保存当前的分页要渲染的数组
@@ -82,6 +83,8 @@ export default {
         (this.pageIndex - 1) * this.pageSize,
         this.pageIndex * this.pageSize
       );
+      // console.log(arr,7777);
+      
       return arr;
     }
   },
