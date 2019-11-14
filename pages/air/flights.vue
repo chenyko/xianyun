@@ -59,8 +59,9 @@ cacheFlightsData:{
       // 分页的变量
       pageIndex: 1,
       pageSize: 5,
-      total: 0
-    };
+      total: 0,
+
+    }
   },
   components: {
     FlightsListHead,
