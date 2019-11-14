@@ -68,7 +68,18 @@ export default {
     // 选择出发时间时候触发
     handleFlightTimes(value) {
       // val 6,12 这种形式的
-
+       const [start,end]=value.split(',') //[6,12]
+      //  console.log([start,end],555);
+       
+       const arr=this.data.flights.filter(v=>{
+        // console.log(v.dep_time);
+         
+       const current = v.dep_time.split(":")[0];
+     
+      // 出发小时必须要小于或者等于选中的开始时间，并且小于选中的结束时间
+       return  +start <= +current && +current < +end;
+       })
+       this.$emit('setDataList',arr)
     },
 
     // 选择航空公司时候触发
