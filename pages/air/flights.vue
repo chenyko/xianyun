@@ -22,8 +22,8 @@
           :page-sizes="[5, 10, 15, 20]"
           :page-size="pageSize"
           layout="total,prev, pager, next, jumper"
-          :total="total">
-          </el-pagination>
+          :total="total"
+        ></el-pagination>
       </div>
 
       <!-- 侧边栏 -->
@@ -43,15 +43,16 @@ export default {
   data() {
     return {
       // 总数据，包含了 flights， info， options，flights用来渲染航班列表
-      flightsData: {},
+      flightsData: {
+        flights: []
+      },
 
       // 保存当前的分页要渲染的数组
-      dataList:[],
+      // dataList: [],
       // 分页的变量
-      pageIndex:1,
-      pageSize:5,
-      total:0,
-
+      pageIndex: 1,
+      pageSize: 5,
+      total: 0
     };
   },
   components: {
@@ -67,19 +68,27 @@ export default {
       const { data } = res;
       this.flightsData = data;
       // 当前分页渲染的列表
-      this.dataList=this.flightsData.flights.slice(0,5);
+      // this.dataList=this.flightsData.flights.slice(0,5);
       // 数据的总条数
-      this.total=this.flightsData.total;
+      this.total = this.flightsData.total;
     });
   },
-  methods:{
-    handleSizeChange(){
-
+  computed: {
+    dataList() {
+      const arr = this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
+      return arr;
+    }
+  },
+  methods: {
+    handleSizeChange(val) {
+      this.pageSize = val;
     },
-    handleCurrentChange(val){
-    this.pageIndex=val;
-    this.dataList=this.flightsData.flights.slice((val-1)*this.pageSize,val*this.pageSize);
-    },
+    handleCurrentChange(val) {
+      this.pageIndex = val;
+    }
   }
 };
 </script>
