@@ -4,7 +4,8 @@
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
         <el-col :span="6">
-          <span>{{data.airline_name}}</span> {{ data.flight_no }}
+          <span>{{data.airline_name}}</span>
+          {{ data.flight_no }}
         </el-col>
         <el-col :span="12">
           <el-row type="flex" justify="space-between" class="flight-info-center">
@@ -13,7 +14,7 @@
               <span>{{ data.org_airport_name }} {{ data.org_airport_quay }}</span>
             </el-col>
             <el-col :span="8" class="flight-time">
-              <span>2时20分</span>
+              <span>{{rankTime}}</span>
             </el-col>
             <el-col :span="8" class="flight-airport">
               <strong>{{ data.arr_time }}</strong>
@@ -29,13 +30,19 @@
     </div>
     <div class="flight-recommend">
       <!-- 隐藏的座位信息列表 -->
-      <el-row type="flex" justify="space-between" align="middle"
-      v-for="(item, index) in data.seat_infos" :key="index">
+      <el-row
+        type="flex"
+        justify="space-between"
+        align="middle"
+        v-for="(item, index) in data.seat_infos"
+        :key="index"
+      >
         <el-col :span="4">低价推荐</el-col>
         <el-col :span="20">
           <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
             <el-col :span="16" class="flight-sell-left">
-              <span>{{item.name}}</span> | {{ item.supplierName }}
+              <span>{{item.name}}</span>
+              | {{ item.supplierName }}
             </el-col>
             <el-col :span="5" class="price">￥{{ item.org_settle_price }}</el-col>
             <el-col :span="3" class="choose-button">
@@ -60,12 +67,35 @@ export default {
     }
   },
 
-  data(){
-    return{
-     
+  data() {
+    return {};
+  },
+  computed: {
+    rankTime() {
+      if (!this.data.arr_time) return "";
+      const arr = this.data.arr_time.split(":"); //例如：arr=[18,30]
+      const dep = this.data.dep_time.split(":"); //例如：dep=[16,00]
+
+      // 如果到达的小时小于出发时间的小时，说明到了第二天凌晨
+      if (arr[0] < dep[0]) {
+        arr[0] = arr[0] + 24;
+      }
+
+      // 把出发时间和到达时间换成分钟
+      const end = arr[0] * 60 + +arr[1];
+      const start = dep[0] * 60 + +dep[1];
+
+      // 间隔时间
+      const dis = end - start;
+
+      // 小时
+      const hours = Math.floor(dis / 60);
+      // 分钟
+      const min = dis % 60;
+
+      return `${hours}时${min}分钟`;
     }
   }
-  
 };
 </script>
 
