@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <FlightsFilters :data='flightsData' @setDataList='setDataList'/>
+        <FlightsFilters :data="cacheFlightsData" @setDataList="setDataList" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
@@ -38,7 +38,7 @@
 import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
-import FlightsFilters from '@/components/air/flightsFilters'
+import FlightsFilters from "@/components/air/flightsFilters";
 
 export default {
   data() {
@@ -46,10 +46,14 @@ export default {
       // 总数据，包含了 flights， info， options，flights用来渲染航班列表
       flightsData: {
         flights: [],
-        info:{},
-        options:{}
+        info: {},
+        options: {}
       },
-
+      cacheFlightsData: {
+        flights: [],
+        info: {},
+        options: {}
+      },
       // 保存当前的分页要渲染的数组
       // dataList: [],
       // 分页的变量
@@ -73,6 +77,8 @@ export default {
       this.flightsData = data;
       // 当前分页渲染的列表
       // this.dataList=this.flightsData.flights.slice(0,5);
+      // 赋值给拷贝的新数据, 这份数据一旦赋值之后不能被修改
+      this.cacheFlightsData = { ...data };
       // 数据的总条数
       this.total = this.flightsData.total;
     });
@@ -83,8 +89,8 @@ export default {
         (this.pageIndex - 1) * this.pageSize,
         this.pageIndex * this.pageSize
       );
-       console.log(arr,7777);
-      
+      //  console.log(arr,7777);
+
       return arr;
     }
   },
@@ -95,9 +101,9 @@ export default {
     handleCurrentChange(val) {
       this.pageIndex = val;
     },
-    setDataList(arr){
+    setDataList(arr) {
       this.flightsData.flights = arr;
-      console.log(this.flightsData.flights,6666);
+      // console.log(this.flightsData.flights,6666);
     }
   }
 };
