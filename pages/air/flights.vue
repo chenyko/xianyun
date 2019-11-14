@@ -10,7 +10,7 @@
         <FlightsListHead />
 
         <!-- 航班信息 -->
-        <FlightsItem v-for="(item, index) in flightsData.flights" :key="index" :data="item" />
+        <FlightsItem v-for="(item, index) in dataList" :key="index" :data="item" />
         <!-- 分页组件 -->
         <!-- size-change: 切换条数时候触发的事件 -->
         <!-- current-change：页数切换时候触发的事件 -->
@@ -44,6 +44,9 @@ export default {
     return {
       // 总数据，包含了 flights， info， options，flights用来渲染航班列表
       flightsData: {},
+
+      // 保存当前的分页要渲染的数组
+      dataList:[],
       // 分页的变量
       pageIndex:1,
       pageSize:5,
@@ -63,6 +66,10 @@ export default {
       console.log(res.data, 8888);
       const { data } = res;
       this.flightsData = data;
+      // 当前分页渲染的列表
+      this.dataList=this.flightsData.flights.slice(0,5);
+      // 数据的总条数
+      this.total=this.flightsData.total;
     });
   },
   methods:{
