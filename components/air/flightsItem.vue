@@ -1,5 +1,5 @@
 <template>
-  <div class="flight-item" >
+  <div class="flight-item">
     <div @click="isShow=!isShow">
       <!-- 显示的机票信息 -->
       <el-row type="flex" align="middle" class="flight-info">
@@ -46,7 +46,9 @@
             </el-col>
             <el-col :span="5" class="price">￥{{ item.org_settle_price }}</el-col>
             <el-col :span="3" class="choose-button">
-              <el-button type="warning" size="mini">选定</el-button>
+              <nuxt-link :to="`/air/order?id=${data.id}&seat_xid=${item.seat_xid}`">
+                <el-button type="warning" size="mini">选定</el-button>
+              </nuxt-link>
               <p>剩余：{{ item.discount }}</p>
             </el-col>
           </el-row>
@@ -69,7 +71,7 @@ export default {
 
   data() {
     return {
-      isShow:false
+      isShow: false
     };
   },
   computed: {
