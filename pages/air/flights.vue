@@ -76,8 +76,9 @@ export default {
     handleSizeChange(){
 
     },
-    handleCurrentChange(){
-
+    handleCurrentChange(val){
+    this.pageIndex=val;
+    this.dataList=this.flightsData.flights.slice((val-1)*this.pageSize,val*this.pageSize);
     },
   }
 };
