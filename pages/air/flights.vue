@@ -68,10 +68,33 @@ cacheFlightsData:{
     FlightsFilters,
     FlightsAside
   },
-  mounted() {
+  
+  computed: {
+    dataList() {
+      const arr = this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
+      //  console.log(arr,7777);
+      
+      return arr;
+    }
+  },
+
+   // 监听路由的变化，在组件被复用使用调用这个路由守卫
+    async beforeRouteUpdate(to, from , next){
+        // 获取航班列表的函数,返回promise
+        await this.getList(to.query)
+        // 必须要调用
+        next();
+    },
+   
+
+  methods: {
+    getList(query){
     this.$axios({
       url: "/airs",
-      params: this.$route.query
+      params: query
     }).then(res => {
       console.log(res.data, 8888);
       const { data } = res;
@@ -85,18 +108,6 @@ cacheFlightsData:{
       
     });
   },
-  computed: {
-    dataList() {
-      const arr = this.flightsData.flights.slice(
-        (this.pageIndex - 1) * this.pageSize,
-        this.pageIndex * this.pageSize
-      );
-      //  console.log(arr,7777);
-      
-      return arr;
-    }
-  },
-  methods: {
     // 分页切换条数时候触发
     handleSizeChange(val) {
       this.pageSize = val;
@@ -117,7 +128,11 @@ cacheFlightsData:{
       this.pageIndex=1
       // console.log(this.flightsData.flights,6666);
     }
+  },
+   mounted() {
+    this.getList(this.$route.query)
   }
+  
 };
 </script>
 
