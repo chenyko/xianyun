@@ -84,7 +84,7 @@ export default {
   },
   computed: {
     filter() {
-      console.log(123);
+      // console.log(123);
       
       let arr = [];
       arr = this.data.flights.filter(v => {
