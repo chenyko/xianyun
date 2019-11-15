@@ -27,9 +27,7 @@
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside">
-        <!-- 侧边栏组件 -->
-      </div>
+     <FlightsAside/>
     </el-row>
   </section>
 </template>
@@ -38,7 +36,8 @@
 import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead";
 import FlightsItem from "@/components/air/flightsItem";
-import FlightsFilters from '@/components/air/flightsFilters'
+import FlightsFilters from '@/components/air/flightsFilters';
+import FlightsAside from '@/components/air/flightsAside'
 
 export default {
   data() {
@@ -66,7 +65,8 @@ cacheFlightsData:{
   components: {
     FlightsListHead,
     FlightsItem,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside
   },
   mounted() {
     this.$axios({
