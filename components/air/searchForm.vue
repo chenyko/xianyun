@@ -208,7 +208,11 @@ export default {
       })
 
        // 只要有一个条件不满足，禁止跳转
-        if(!valid) return
+        if(!valid) return;
+
+        // 保存搜索记录到store中
+        this.$store.commit("air/setHistory", this.form);
+
 
        this.$router.push({
           path:'/air/flights',
