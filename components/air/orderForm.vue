@@ -2,8 +2,8 @@
   <div class="main">
     <div class="air-column">
       <h2>乘机人</h2>
-      <el-form class="member-info" >
-        <div class="member-info-item" v-for="(item,index) in users" :key="index">
+      <el-form class="member-info">
+        <div class="member-info-item" v-for="(item,index) in form.users" :key="index">
           <el-form-item label="乘机人类型">
             <el-input v-model="item.username" placeholder="姓名" class="input-with-select">
               <el-select slot="prepend" value="1" placeholder="请选择">
@@ -29,7 +29,7 @@
       <h2>保险</h2>
       <div>
         <div class="insurance-item" v-for="(item,index) in infoData.insurances" :key="index">
-          <el-checkbox :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border></el-checkbox>
+          <el-checkbox @change="handleInsurance(item.id)" :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border></el-checkbox>
         </div>
       </div>
     </div>
@@ -64,29 +64,39 @@
 export default {
   data() {
     return {
-      users: [
-        {
-          username: "",
-          id: ""
-        }
-      ],
-      infoData:{}
+      form: {
+        users: [
+          {
+            username: "",
+            id: ""
+          }
+        ],
+        insurances: [], // 保险数据
+        contactName: "", // 联系人名字
+        contactPhone: "", // 联系人电话
+        captcha: "", // 验证码
+        invoice: false ,// 发票
+        seat_xid: "",
+        air: ""
+      },
+
+      infoData: {}
     };
   },
-  mounted(){
-     // 请求当前的机票的信息
-      const {id, seat_xid}=this.$route.query;
-      this.$axios({
-        url:"/airs/" + id,
-        params:{seat_xid}
-      }).then(res=>{
-          this.infoData=res.data
-      })
+  mounted() {
+    // 请求当前的机票的信息
+    const { id, seat_xid } = this.$route.query;
+    this.$axios({
+      url: "/airs/" + id,
+      params: { seat_xid }
+    }).then(res => {
+      this.infoData = res.data;
+    });
   },
   methods: {
     // 添加乘机人
     handleAddUsers() {
-      this.users.push({
+      this.form.users.push({
         username: "",
         id: ""
       });
@@ -94,14 +104,30 @@ export default {
 
     // 移除乘机人
     handleDeleteUser(index) {
-      this.users.splice(index, 1);
+      this.form.users.splice(index, 1);
     },
 
     // 发送手机验证码
     handleSendCaptcha() {},
 
     // 提交订单
-    handleSubmit() {}
+    handleSubmit() {
+      // 测试保险数据
+      // console.log(this.form.insurances);
+      
+    },
+
+    // 选中保险的时候触发
+    handleInsurance(id){
+      const index=this.form.insurances.indexOf(id);
+      // 先判断是否有选中
+      if(index>-1){
+        // 如果有选中就删除
+        this.form.insurances.splice(index,1)
+      }else{
+        this.form.insurances.push(id)
+      }
+    }
   }
 };
 </script>
