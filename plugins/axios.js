@@ -11,11 +11,17 @@ export default ({$axios, redirect})=>{
             Message.error(message)
         }
 
-        if(statusCode===403){
+        // if(statusCode===403){
+        //     Message.error('请先登录');
+        //     // 跳转到登录页
+        //     redirect("/user/login");
+
+        // }
+
+        if([403,401].indexOf(statusCode)>-1){
             Message.error('请先登录');
             // 跳转到登录页
             redirect("/user/login");
-
         }
     })
 }
