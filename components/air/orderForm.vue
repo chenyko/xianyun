@@ -91,6 +91,8 @@ export default {
       params: { seat_xid }
     }).then(res => {
       this.infoData = res.data;
+      // 保存到store
+      this.$store.commit("air/setInfoData", res.data);
     });
   },
   methods: {
