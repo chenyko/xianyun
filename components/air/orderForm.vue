@@ -51,7 +51,7 @@
           </el-form-item>
 
           <el-form-item label="验证码" v-model="form.captcha">
-            <el-input></el-input>
+            <el-input v-model="form.captcha"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -121,6 +121,17 @@ export default {
     handleSubmit() {
       // 测试保险数据
       // console.log(this.form.insurances);
+      // 修改座位id和航班的id, id:air是声明了别名
+      const {id:air,seat_xid}=this.$route.query
+      this.form={...this.form, air, seat_xid};
+       this.$axios({
+          url: "/airorders",
+                method: "POST",
+                data: this.form
+            }).then(res => {
+                console.log(res);
+            
+       })
       
     },
 
