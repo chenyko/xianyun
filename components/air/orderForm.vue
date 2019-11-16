@@ -38,19 +38,19 @@
       <h2>联系人</h2>
       <div class="contact">
         <el-form label-width="60px">
-          <el-form-item label="姓名">
-            <el-input></el-input>
+          <el-form-item label="姓名" >
+            <el-input v-model="form.contactName"></el-input>
           </el-form-item>
 
           <el-form-item label="手机">
-            <el-input placeholder="请输入内容">
+            <el-input placeholder="请输入内容" v-model="form.contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
               </template>
             </el-input>
           </el-form-item>
 
-          <el-form-item label="验证码">
+          <el-form-item label="验证码" v-model="form.captcha">
             <el-input></el-input>
           </el-form-item>
         </el-form>
@@ -76,8 +76,8 @@ export default {
         contactPhone: "", // 联系人电话
         captcha: "", // 验证码
         invoice: false ,// 发票
-        seat_xid: "",
-        air: ""
+        seat_xid: "", //座位id
+        air: ""       // 航班id
       },
 
       infoData: {}
@@ -108,7 +108,14 @@ export default {
     },
 
     // 发送手机验证码
-    handleSendCaptcha() {},
+   async  handleSendCaptcha() {
+     if(!this.form.contactPhone){
+       this.$message.error("请输入手机号码")
+         return;
+     }
+     const code=await this.$store.dispatch('user/sendCaptcha',this.form.contactPhone);
+     this.$message.success("模拟的手机验证码是：" + code)
+    },
 
     // 提交订单
     handleSubmit() {
