@@ -29,7 +29,11 @@
       <h2>保险</h2>
       <div>
         <div class="insurance-item" v-for="(item,index) in infoData.insurances" :key="index">
-          <el-checkbox @change="handleInsurance(item.id)" :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border></el-checkbox>
+          <el-checkbox
+            @change="handleInsurance(item.id)"
+            :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`"
+            border
+          ></el-checkbox>
         </div>
       </div>
     </div>
@@ -38,7 +42,7 @@
       <h2>联系人</h2>
       <div class="contact">
         <el-form label-width="60px">
-          <el-form-item label="姓名" >
+          <el-form-item label="姓名">
             <el-input v-model="form.contactName"></el-input>
           </el-form-item>
 
@@ -57,6 +61,7 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    <span v-show="false">{{allPrice}}</span>
   </div>
 </template>
 
@@ -75,13 +80,31 @@ export default {
         contactName: "", // 联系人名字
         contactPhone: "", // 联系人电话
         captcha: "", // 验证码
-        invoice: false ,// 发票
+        invoice: false, // 发票
         seat_xid: "", //座位id
-        air: ""       // 航班id
+        air: "" // 航班id
       },
 
       infoData: {}
     };
+  },
+  computed: {
+    allPrice() {
+      if (!this.infoData.seat_infos) return;
+      // 总金额
+      let price = 0;
+      // 单价
+      price += this.infoData.seat_infos.org_settle_price;
+      // 基建燃油费
+      price += this.infoData.airport_tax_audlet;
+      // 保险
+      price += this.form.insurances.length * 30;
+      // 乘以人数
+      price *= this.form.users.length;
+      // 保存到store对的allPrice
+      this.$store.commit("air/setAllPrice", price);
+      return "";
+    }
   },
   mounted() {
     // 请求当前的机票的信息
@@ -110,13 +133,16 @@ export default {
     },
 
     // 发送手机验证码
-   async  handleSendCaptcha() {
-     if(!this.form.contactPhone){
-       this.$message.error("请输入手机号码")
-         return;
-     }
-     const code=await this.$store.dispatch('user/sendCaptcha',this.form.contactPhone);
-     this.$message.success("模拟的手机验证码是：" + code)
+    async handleSendCaptcha() {
+      if (!this.form.contactPhone) {
+        this.$message.error("请输入手机号码");
+        return;
+      }
+      const code = await this.$store.dispatch(
+        "user/sendCaptcha",
+        this.form.contactPhone
+      );
+      this.$message.success("模拟的手机验证码是：" + code);
     },
 
     // 提交订单
@@ -124,33 +150,31 @@ export default {
       // 测试保险数据
       // console.log(this.form.insurances);
       // 修改座位id和航班的id, id:air是声明了别名
-       
-      const {id:air,seat_xid}=this.$route.query
-      this.form={...this.form, air, seat_xid};
-       this.$axios({
-          url: "/airorders",
-                method: "POST",
-                data: this.form,
-                headers: {
-                    // Bearer属于jwt的token标准
-                   Authorization: "Bearer " + this.$store.state.user.userInfo.token
-                }
-            }).then(res => {
-                console.log(res);
-            
-       })
-      
+
+      const { id: air, seat_xid } = this.$route.query;
+      this.form = { ...this.form, air, seat_xid };
+      this.$axios({
+        url: "/airorders",
+        method: "POST",
+        data: this.form,
+        headers: {
+          // Bearer属于jwt的token标准
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        }
+      }).then(res => {
+        console.log(res);
+      });
     },
 
     // 选中保险的时候触发
-    handleInsurance(id){
-      const index=this.form.insurances.indexOf(id);
+    handleInsurance(id) {
+      const index = this.form.insurances.indexOf(id);
       // 先判断是否有选中
-      if(index>-1){
+      if (index > -1) {
         // 如果有选中就删除
-        this.form.insurances.splice(index,1)
-      }else{
-        this.form.insurances.push(id)
+        this.form.insurances.splice(index, 1);
+      } else {
+        this.form.insurances.push(id);
       }
     }
   }

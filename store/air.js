@@ -6,7 +6,9 @@ export const state=()=>{
         infoData: {
             // 防止页面报错
             seat_infos: {}
-        }
+        },
+        // 总价格
+        allPrice: 0
     }
    
 }
@@ -16,5 +18,9 @@ export const mutations ={
     },
     setInfoData(state,data){
         state.infoData=data
+    },
+     // 修改总价格
+     setAllPrice(state, price){
+        state.allPrice = price;
     }
 }
