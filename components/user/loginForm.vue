@@ -82,7 +82,8 @@ methods:{
             try{
                await this.$store.dispatch('user/login',this.form);
             // 跳转到首页
-            this.$router.replace('/');
+            // this.$router.replace('/');
+            this.$router.back();
             // 弹窗提示
             this.$message.success('登陆成功')
             }catch(err){
