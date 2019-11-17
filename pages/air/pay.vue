@@ -25,7 +25,28 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      order: {}
+    };
+  },
+  mounted() {
+    const { id } = this.$route.query;
+    setTimeout(() => {
+      this.$axios({
+        url: "/airorders/" + id,
+        headers: {
+          // Bearer属于jwt的token标准
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        }
+      }).then(res=>{
+        //   console.log(res);
+          this.order=res.data
+      })
+    }, 1);
+  }
+};
 </script>
 
 <style scoped lang="less">
