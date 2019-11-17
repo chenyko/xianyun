@@ -3,7 +3,7 @@
     <div class="main">
       <div class="pay-title">
         支付总金额
-        <span class="pay-price">￥ 1000</span>
+        <span class="pay-price">￥ {{order.price | toFixed}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
@@ -29,12 +29,17 @@ import QRCode from "qrcode";
 export default {
   data() {
     return {
-      order: {}
+      order: {},
+      // 定时器
+      timer: null
     };
   },
   mounted() {
     const { id } = this.$route.query;
+
+    // 定时器主要为了等待本地存储把值返回给store，才可以获取到token
     setTimeout(() => {
+      // 请求订单详情
       this.$axios({
         url: "/airorders/" + id,
         headers: {
@@ -42,17 +47,53 @@ export default {
           Authorization: "Bearer " + this.$store.state.user.userInfo.token
         }
       }).then(res => {
-        //   console.log(res);
         this.order = res.data;
-
-        // 生成二维码
         const canvas = document.querySelector("#qrcode-stage");
+        // 第一个参数是canvas 是dom元素, 要生成二位的连接
+        QRCode.toCanvas(canvas, this.order.payInfo.code_url, {
+          width: 200
+        });
 
-        // 第一个参数是canvas是 dom元素, 要生成二位的连接
-        QRCode.toCanvas(canvas, this.order.payInfo.code_url, {width: 200});
+        // 支付结果轮询
+        this.timer = setInterval(() => {
+          this.checkPay(this.order);
+        }, 3000);
       });
     }, 1);
+  },
+  methods: {
+    // 查询付款状态
+    async checkPay(data) {
+      const res = await this.$axios({
+        url: "/airorders/checkpay",
+        method: "POST",
+        data: {
+          id: data.id,
+          nonce_str: data.price, // 订单金额
+          out_trade_no: data.orderNo // 订单编码
+        },
+        headers: {
+          // Bearer属于jwt的token标准
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        }
+      });
+      const { statusTxt } = res.data;
+
+      if (statusTxt == "支付完成") {
+        this.$alert(statusTxt, "提示", {
+          type: "success"
+        });
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    }
+  },
+  filters:{
+    toFixed(value){
+    return Number(value || 0).toFixed(2)
   }
+  }
+
 };
 </script>
 
