@@ -1,62 +1,114 @@
 <template>
-  <el-row class="tac">
-      <el-col :span="12">
-    <h5>自定义颜色</h5>
-    <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b">
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <el-menu-item-group>
-          <template slot="title">分组一</template>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-      <el-menu-item index="2">
-        <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
-      </el-menu-item>
-    </el-menu>
-  </el-col>
-  </el-row>
+  <div class="conent" @mouseleave="clearActive">
+    <div
+      class="hotcity"
+      ref="hotcity"
+      v-for="(item,index) in cityList"
+      :key="index"
+      @mouseover="toActive(index)"
+    >
+      <span>{{item.type}}</span>
+      <span class="el-icon-arrow-right"></span>
+      <div class="one_city" ref="one_city">
+        <div class="citylist" v-for="(item,index) in item.children" :key="index">
+          <span>{{index+1}}</span>
+          {{item.city}}
+          <em>{{item.desc}}</em>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-  export default {
-    methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
+export default {
+  data() {
+    return {
+      cityList: []
+    };
+  },
+  mounted() {
+    this.$axios({
+      url: "/posts/cities"
+    }).then(res => {
+      this.cityList = res.data.data;
+    });
+  },
+  methods: {
+    toActive(index) {
+      this.$refs.hotcity.forEach((e, i) => {
+        if (i == index) {
+          e.classList.add("orange");
+        } else {
+          e.classList.remove("orange");
+        }
+      });
+      this.$refs.hotcity.forEach((e, i) => {
+        if (i == index) {
+          e.style = "border-right:1px solid #fff";
+        } else {
+          e.style = "border-right:1px solid #bbb";
+        }
+      });
+      this.$refs.one_city.forEach((e, i) => {
+        e.style =
+          i == index
+            ? e.classList.add("display")
+            : e.classList.remove("display");
+      });
+    },
+    clearActive(index) {
+      this.$refs.hotcity.forEach(e => {
+        e.classList.remove("orange");
+      });
+      this.$refs.hotcity.forEach(e => {
+        e.style = "border-right:1px solid #bbb";
+      });
+      this.$refs.one_city.forEach(e => {
+        e.classList.remove("display");
+      });
     }
   }
+};
 </script>
-<style>
 
+<style lang="less" scoped>
+.orange{
+    color: orange;
+}
+.display{
+    display: block !important;
+}
+.conent{
+    position: relative;
+}
+.hotcity{
+    font-size: 14px;
+    border-right: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-top: 1px solid #bbb;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    &:last-child{
+        border-bottom: 1px solid #bbb;
+    }
+}
+.one_city{
+    background-color: #fff;
+    z-index: -1;
+    box-sizing: border-box;
+    padding: 20px 20px;
+    position: absolute;
+    right: -349px;
+    top: 0;
+    border: 1px solid #bbb;
+    // border-left: 0;
+    width: 350px;
+    height: 200px;
+    display: none;
+    .citylist{
+        height: 40px;
+    }
+}
 </style>
