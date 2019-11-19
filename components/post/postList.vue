@@ -123,6 +123,7 @@ export default {
   border-bottom: 1px solid #eee;
   .left {
     margin-right: 15.001px;
+    margin-left: 8px;
     .title {
       margin-bottom: 15.002px;
       font-size: 18px;
