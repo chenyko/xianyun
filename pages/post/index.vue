@@ -51,8 +51,8 @@ export default {
   data() {
     return {
       postList: [],
-      pageSize: 3,
-      pageIndex: 1,
+        pageSize: 3,
+        pageIndex: 1,
       total: 0
     };
   },
@@ -82,7 +82,7 @@ export default {
       // value为当前页条数
       this.pageSize = value;
     },
-    getSomeData() {
+     getSomeData() {
       this.$axios({
         url: "/posts",
         params: {
@@ -90,12 +90,12 @@ export default {
           _start: (this.pageIndex - 1) * this.pageSize
         }
       }).then(res => {
-        // console.log(res);
+        console.log(res);
         this.postList = res.data.data;
         console.log(this.postList);
-
         this.total = res.data.total;
       });
+      
     },
     appendPage() {
       this.$router.push("/post/append");

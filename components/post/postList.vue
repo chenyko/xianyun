@@ -11,7 +11,7 @@
         <div class="top">
           <div class="title" @click="jumpPostDeail">{{data.title}}</div>
         </div>
-        <div class="summary" v-html="data.summary"></div>
+        <div class="summary" v-html="data.summary" @click="jumpPostDeail"></div>
         <div class="bottom">
           <!-- 跟帖部分 -->
           <div>
@@ -33,7 +33,7 @@
       </div>
       <div class="left">
         <div @click="jumpPostDeail" class="title">{{data.title}}</div>
-        <div class="summary" v-html="data.summary"></div>
+        <div class="summary" @click="jumpPostDeail" v-html="data.summary" ></div>
         <span class="dantiaoData">
           <div>
             <i class="el-icon-location-outline"></i>
@@ -52,7 +52,7 @@
       <div class="top">
         <div @click="jumpPostDeail" class="title">{{data.title}}</div>
       </div>
-      <div class="summary" v-html="data.summary"></div>
+      <div class="summary" v-html="data.summary"  @click="jumpPostDeail"></div>
       <div @click="jumpPostDeail" class="middleImg">
         <img :src="data.images[0]" alt />
         <img :src="data.images[1]" alt />
@@ -68,8 +68,10 @@
           <i class="el-icon-view"></i>
           <span>{{data.watch}}</span>
         </div>
-        <div style="color:orange;font-size:16px">{{data.like}} 赞</div>
+        <div style="color:orange;font-size:16px">{{data.like}} 赞 </div>
       </div>
+    </div>
+    <div>
     </div>
   </div>
 </template>
@@ -80,14 +82,14 @@ export default {
     data: {
       type: Object,
       default: {
-        images: []
+        images: [],
       }
     }
   },
   methods: {
     jumpPostDeail() {
-      // console.log(this.item.id);
-      this.$router.push({});
+    // console.log(this.data.id);
+      this.$router.push('/post/postItem'+'?id='+this.data.id);
     }
   }
 };
