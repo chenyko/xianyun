@@ -7,7 +7,7 @@
         <span>攻略详情</span>
       </div>
       <h1>{{item.title}}</h1>
-      <div class="post_info">攻略：{{item.created_at  }} 阅读：{{item.watch}}</div>
+      <div class="post_info">攻略：{{item.created_at | formteTime}} 阅读：{{item.watch}}</div>
       <div class="article" v-html="item.content"></div>
       <div class="icon_list">
         <div>
@@ -30,7 +30,16 @@
         <el-alert title="回复 @地球发动机" type="info"></el-alert>
         <textarea name id placeholder="说点什么吧..."></textarea>
         <div class="submit_btn">
-          <div></div>
+          <div>
+            <el-upload
+             :action="$axios.defaults.baseURL+'/upload'"
+             list-type="picture-card"
+             :on-remove="handleRemove"
+             type="file" name="files"
+             >
+             <i class="el-icon-plus"></i>
+            </el-upload>
+          </div>
           <input type="button" value="提交" />
         </div>
         <div class="comment_con">
@@ -95,14 +104,14 @@
         </div>
       </div>
     </div>
-    <div class="right">
+    <div class="right" >
       <h3>相关攻略</h3>
       <ul>
-        <li>
-          <img src="" />
+        <li v-for="(item,index) in recommend" :key='index'>
+          <img src="./images/02.png" />
           <div>
-            <p>塞班贵？一定是你的打开方式不对！6000块玩转塞班6000块玩转塞班6000块玩转塞班</p>
-            <span>2019-11-19 3:37 阅读</span>
+            <p>{{item.title}}</p>
+            <span>{{item.created_at | formteTime}} 阅读{{item.watch}}</span>
           </div>
         </li>
       </ul>
@@ -112,10 +121,17 @@
 
 <script>
 import moment from "moment";
+
 export default {
   data() {
     return {
-      post:[]
+      post:[],
+      recommend:[],
+      comments:{
+        id:this.$route.query.id,
+        _start:1,
+        _limit:3,
+      },
     };
   },
   methods: {
@@ -128,7 +144,6 @@ export default {
       url:'/posts',
       params:{id},
    }).then(res=>{
-    //  console.log(res);
      this.post=res.data.data;
      console.log(this.post);
    })
@@ -164,19 +179,45 @@ export default {
     }).then(res=>{
       console.log(res);
     })
-  }
-   
+  },
+  handleRemove(){
+    console.log('删除了图片');
+  },
+  getPostreCommend(){
+    this.$axios({
+      url:'/posts/recommend'
+    }).then(res=>{
+      // console.log(res);
+      const {data}=res.data
+      this.recommend=data
+      // console.log(this.recommend);
+      
+    })
+  },
+  getComments(){
+   this.$axios({
+     url:'/posts/comments',
+     params:this.comments
+   }).then(res=>{
+     console.log(res);
+     
+   })
+    
+  },
   },
   mounted() {
-   this.getPost()
+   this.getPost();
+   this.getPostreCommend();
+   this.getComments()
   },
-  // filters:{
-  //  data(value){
-  //    value=moment(this.post[0].created_at).format(
-  //       "YYYY-MM-DD HH:MM"
-  //     );
-  //  }
-  // },
+  filters:{
+   formteTime(value){
+    return value=moment(value).format(
+        "YYYY-MM-DD HH:MM"
+      );
+   }
+  },
+  
 };
 </script>
 
