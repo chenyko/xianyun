@@ -8,8 +8,8 @@
       </div>
       <div class="right">
         <div class="right_top">
-          <input type="text" class="input_txt" placeholder="请输入想去的地方，比如：'广州'" />
-          <i class="el-icon-search search"></i>
+          <input type="text" class="input_txt" placeholder="请输入想去的地方，比如：'广州'" v-model="city" />
+          <i class="el-icon-search search" @click="postkinds"></i>
         </div>
         <div class="sousuo">
           推荐：
@@ -53,7 +53,8 @@ export default {
       postList: [],
         pageSize: 3,
         pageIndex: 1,
-      total: 0
+       total: 0,
+       city:'',
     };
   },
   components: {
@@ -72,6 +73,23 @@ export default {
   mounted() {
     this.getSomeData();
   },
+  // 监听路由的变化，在组件被复用使用调用这个路由守卫
+     beforeRouteUpdate(to, from , next){
+        this.$axios({
+        url: "/posts/"+'?city='+this.city,
+        params: {
+          _limit: this.pageSize,
+          _start: (this.pageIndex - 1) * this.pageSize,
+          
+        }
+      }).then(res => {
+        console.log(res);
+        this.postList = res.data.data;
+        console.log(this.postList);
+        this.total = res.data.total;
+      });
+        next();
+    },
   methods: {
     handleCurrentChange(value) {
       // value为当前页
@@ -99,6 +117,23 @@ export default {
     },
     appendPage() {
       this.$router.push("/post/append");
+    },
+    postkinds(){
+      console.log(this.city);
+      this.$router.push("/posts/"+'?city='+this.city)
+      //  this.$axios({
+      //   url: "/posts/"+'?city='+this.city,
+      //   params: {
+      //     _limit: this.pageSize,
+      //     _start: (this.pageIndex - 1) * this.pageSize,
+          
+      //   }
+      // }).then(res => {
+      //   // console.log(res);
+      //   this.postList = res.data.data;
+      //   console.log(this.postList);
+      //   this.total = res.data.total;
+      // });
     }
   }
 };

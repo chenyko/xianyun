@@ -128,8 +128,8 @@ export default {
       post:[],
       recommend:[],
       comments:{
-        id:this.$route.query.id,
-        _start:1,
+        post:this.$route.query.id,
+        _start:0,
         _limit:3,
       },
     };

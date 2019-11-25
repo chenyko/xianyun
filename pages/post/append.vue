@@ -10,14 +10,12 @@
           </div>
           <div class="from-content">
             <!-- <el-form-item>
-            <el-upload
-                :action="$axios.defaults.baseURL + '/upload/'"
-                list-type="picture-card"
-                :on-success="coverUploaded"
-                :on-remove="coverRemoved"
-                :headers="{Authorization:token}">
-                <i class="el-icon-plus"></i>
-            </el-upload>
+            <vue-editor 
+            v-model="form.content"
+            :useCustomImageHandler="true"
+            @image-added="imgUpload"
+            :editorToolbar="customToolbar"
+            ></vue-editor>
         </el-form-item> -->
              <textarea name="content" id cols="30" rows="10" class="content" v-model="form.content"> 
                 
